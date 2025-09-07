@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Solitaire Dice (Sid Sackson) – PWA</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#1a73e8" />
+  <link rel="apple-touch-icon" href="apple-touch-icon-180.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="title">🎲 Solitaire Dice — Sid Sackson</div>
+  <div class="topbar-actions">
+    <button id="installBtn" class="secondary" hidden>Asenna</button>
+    <button id="resetBtn" class="danger">Uusi peli</button>
+  </div>
+</header>
+
+<main>
+  <section class="status">
+    <div>Heitto: <span id="turnNum">1</span></div>
+    <div>Tilanne: <span id="statusText">Heitä nopat.</span></div>
+    <div>Yhteispisteet: <span id="totalScore">0</span></div>
+  </section>
+
+  <section class="dice-panel">
+    <div class="dice" id="dice"></div>
+    <div class="controls">
+      <button id="rollBtn" class="primary">Heitä nopat</button>
+      <button id="commitBtn" class="primary" disabled>Kirjaa valinta</button>
+      <button id="undoBtn" class="secondary" disabled>Peru</button>
+      <button id="helpBtn" class="secondary">Ohje</button>
+    </div>
+    <div class="hint">Valitse ensin <strong>2</strong> noppaa (pari A), sitten <strong>2</strong> noppaa (pari B). Viides noppa on poistodice.</div>
+  </section>
+
+  <section class="board">
+    <div class="scorecard">
+      <h2>Pistetaulukko (2–12)</h2>
+      <table id="scoreTable" aria-label="Pistetaulukko">
+        <thead>
+          <tr><th>Summa</th><th>Arvo</th><th>Merkintöjä</th><th>Pisteet</th></tr>
+        </thead>
+        <tbody>
+          <!-- Rows injected by JS -->
+        </tbody>
+      </table>
+      <p class="target">Tavoite: 500+ pistettä on “voitto”.</p>
+    </div>
+
+    <div class="throwaways">
+      <h2>Poistodice (valitse enintään 3)</h2>
+      <p style="font-size: .8rem;">Kun yhden numeron merkintöjä kertyy <strong>8</strong>, peli päättyy. “Vapaa kyyti”: jos heitossa ei näy yhtään aiempaa poistodice-numeroa, voit heittää minkä tahansa pois ilman merkintää.</p>
+      <div class="throw-grid" id="throwGrid">
+        <!-- 1..6 injected by JS -->
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>© Sid Sacksonin peli – koodattu sinulle. Säännöt pohjautuvat Seattle Cosmic -kirjaukseen.</span>
+</footer>
+
+<!-- Modals -->
+<dialog id="helpDialog">
+  <h3>Solitaire Dice – ohje</h3>
+  <ol>
+    <li>Heitä 5 noppaa.</li>
+    <li>Valitse 2 noppaa → <em>pari A</em>, sitten 2 noppaa → <em>pari B</em>.</li>
+    <li>Parien summat (2–12) merkitään taulukkoon (merkintöjen määrä kasvaa).</li>
+    <li>Jäljelle jäävä 5. noppa on <strong>poistodice</strong>:
+      <ul>
+        <li>Ensimmäiset kolme poistodice-numeroa “valitaan” pelin aikana automaattisesti sen mukaan, mitä jätät ylimääräiseksi.</li>
+        <li>Jos sinulla on jo 3 poistodice-numeroa ja heitossa ei näy niistä yhtään, saat <strong>vapaa kyyti</strong> — ylimääräinen ei lisää poistomerkintöjä.</li>
+        <li>Jos sinulla on jo 3 numeroa ja heitossa <em>näkyy</em> jokin niistä, ylimääräisen on oltava jokin näistä (muuten et voi kirjata valintaa).</li>
+      </ul>
+    </li>
+    <li>Peli päättyy, kun jokin poistodice-numero saavuttaa 8 merkintää.</li>
+  </ol>
+  <p><strong>Pisteytys per summa:</strong> 1–4 merkintää = −200, 5. = 0, 6.–10. = +arvo per merkintä (2/12=100, 3/11=70, 4/10=60, 5/9=50, 6=40, 7=30). Yli 10 ei lisää.</p>
+  <button id="closeHelp">OK</button>
+</dialog>
+
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js');
+    });
+  }
+</script>
+</body>
+</html>

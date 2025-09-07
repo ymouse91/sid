@@ -1,0 +1,321 @@
+/* =============================
+   UUSI STYLE.CSS (puhdas versio)
+   ============================= */
+
+/* Värit ja mitat */
+:root{
+  --bg: #0b1020;
+  --card: #12192f;
+  --ink: #e9eefc;
+  --muted: #baccff;
+  --accent: #1a73e8;
+  --danger: #e84545;
+
+  --gap: 12px;
+  --radius: 12px;
+  --shadow: 0 8px 24px rgba(0,0,0,.25);
+
+  /* nopan peruskoot (px) — helppo säätää */
+  --die: 72;
+  --pip: 60;
+}
+
+/* Estä iOS:n tekstin automaattinen skaalautuminen */
+html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+
+*{ box-sizing:border-box; }
+html, body{ height:100%; }
+
+body{
+  margin:0;
+  color: var(--ink);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif;
+  background: radial-gradient(1200px 800px at 10% -10%, #1b2447, var(--bg) 60%);
+
+  /* Safe area (iPad lovi/kotipalkki) */
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: contain;
+}
+
+/* Yläpalkki */
+.topbar{
+  position: sticky; top:0; z-index:10;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 12px 16px;
+  padding-top: calc(12px + env(safe-area-inset-top,0));
+  background: rgba(18,25,47,.6);
+  backdrop-filter: blur(6px);
+}
+.title{ font-weight:700; }
+
+/* Pääsisältö */
+main{ max-width:1100px; margin:20px auto; padding:0 16px; }
+
+/* Status-alue: anna keskikolumnille selvästi enemmän tilaa */
+.status{
+  display:grid;
+  grid-template-columns: 0.8fr 2fr 0.8fr; /* tai 1fr 2.2fr 1fr */
+  gap: var(--gap);
+  margin-bottom: 16px;
+}
+
+.status > div{
+  background: var(--card);
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Noppapaneeli */
+.dice-panel{
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.dice{
+  display:flex; flex-wrap:wrap;
+  justify-content:center; align-items:center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+/* Noppa — keskitys varmuudella, koko muuttujilla */
+.die{
+  display:flex; align-items:center; justify-content:center;
+  width: calc(var(--die)*1px);
+  height: calc(var(--die)*1px);
+  border-radius: 16px;
+  background:#fff; color:#111;
+  font-size: calc(var(--pip)*1px);
+  line-height: 1;            /* ei baselinen heittoa */
+  padding: 0;                /* button default pois */
+  border: 2px solid transparent;
+  -webkit-appearance:none; appearance:none;
+  cursor: pointer; user-select: none;
+  transition: transform .07s ease, border-color .2s ease, box-shadow .2s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,.25);
+  font-family: "Apple Color Emoji","Segoe UI Emoji", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+.die.selected{ border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.35); }
+.die.throw{ border-style:dashed; }
+
+.controls{ display:flex; gap:10px; justify-content:center; margin:12px 0 6px; }
+button{
+  border:0; border-radius:10px; padding:10px 14px; font-weight:600; cursor:pointer;
+}
+button.primary{ background: var(--accent); color:#fff; }
+button.secondary{ background:#2a355f; color:var(--ink); }
+button.danger{ background: var(--danger); color:#fff; }
+button:disabled{ opacity:.5; cursor:not-allowed; }
+
+.hint{ text-align:center; color:var(--muted); font-size:.95rem; }
+
+/* Taulukko + poistodice */
+.board{
+  display:grid; grid-template-columns: 1.1fr .9fr; gap: var(--gap);
+}
+.scorecard, .throwaways{
+  background: var(--card);
+  padding: 16px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+h2{ margin:8px 0 12px; font-size:1.1rem; }
+
+table{ width:100%; border-collapse:collapse; font-size:.95rem; }
+thead th{
+  text-align:left; color:var(--muted);
+  font-weight:600; padding:6px 8px; border-bottom:1px solid #2a355f;
+}
+tbody td{ padding:8px; border-bottom:1px solid #223; }
+tbody tr:last-child td{ border-bottom:0; }
+td.sum{ width:80px; }
+td.badge{ font-variant-numeric: tabular-nums; text-align:center; }
+.badge .chip{
+  display:inline-block; min-width:32px; padding:4px 8px; border-radius:999px;
+  text-align:center; background:#24305f; color:var(--ink);
+}
+td.scoreCell.neg{ background:#ffcfda; color:#7a0c26; }
+td.scoreCell.zero{ background:#fff3bf; color:#6b5d00; }
+td.scoreCell.pos{ background:#d3f9d8; color:#0e5d2a; }
+
+.target{ color:var(--muted); }
+
+.throw-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:10px; }
+.throw-item{ background:#1b2344; border-radius:10px; padding:10px; display:grid; gap:4px; }
+.throw-head{ display:flex; align-items:center; justify-content:space-between; }
+.small{ font-size:.9rem; color:var(--muted); }
+.dotrow{ display:flex; gap:4px; flex-wrap:wrap; }
+.dot{ width:14px; height:14px; border-radius:50%; background:#34406e; }
+.dot.on{ background: var(--accent); }
+
+/* Alatunniste */
+.footer{ text-align:center; color:var(--muted); padding:24px 0; }
+
+/* Dialogi */
+dialog{ border:0; border-radius:14px; padding:16px 18px; background:#172140; color:var(--ink); }
+dialog::backdrop{ background: rgba(0,0,0,.5); }
+dialog h3{ margin-top:0; }
+dialog button{ margin-left:auto; display:block; }
+
+/* Kapealla yhdelle palstalle */
+@media (max-width: 900px){
+  .board{ grid-template-columns: 1fr; }
+}
+
+/* =============================
+   iPad VAAKA (Safari + PWA)
+   - pakota 100dvh ja tee body: column
+   ============================= */
+@media (orientation: landscape){
+  html, body{
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  body{
+    display:flex; flex-direction:column;
+    overflow:hidden; /* ei koko sivun scrollia */
+  }
+
+  .topbar{ flex:0 0 auto; }
+  main{
+    flex:1 1 auto;
+    min-height:0;        /* tärkeä: sallii sisäisen overflow'n */
+    overflow:auto;       /* jos sisältöä on liikaa, skrollaa vain main */
+    margin: 12px auto;   /* vähän pienempi marginaali vaakatilassa */
+  }
+}
+
+/* =============================
+   PWA (standalone) + VAAKA
+   - tee taulukosta tiiviimpi
+   - pidä nopat sopivan kokoisina
+   ============================= */
+@media (display-mode: standalone) and (orientation: landscape){
+  /* pieni UI-kerroin */
+  .topbar{ padding: 8px 12px; }
+  .title{ font-size: .95rem; }
+  .hint{ display:none; }
+
+  /* nopat: isohkot mutta hallitut */
+  :root{ --die: 78; --pip: 68; }  /* voit säätää ±2–4px tarpeen mukaan */
+
+  .dice{ gap: 12px; }
+
+  /* pistetaulukko tiiviimmäksi */
+  .scorecard{ padding: 10px; }
+  #scoreTable{
+    table-layout: fixed;
+    font-size: .85rem;
+    line-height: 1.12;
+  }
+  #scoreTable thead th{ padding: 4px 6px; }
+  #scoreTable tbody td{ padding: 4px 6px; }
+  #scoreTable td.sum{ width: 64px; }
+  #scoreTable td.badge .chip{ min-width: 28px; padding: 3px 6px; }
+  #scoreTable td.scoreCell{ white-space: nowrap; }
+
+  .throwaways{ padding: 12px; }
+  .throw-grid{ gap: 8px; }
+  .throw-item{ padding: 8px; }
+  .dot{ width:12px; height:12px; }
+
+  .footer{ padding: 12px 0; font-size: .9rem; }
+}
+
+/* =============================
+   LAND-COMPACT (valinnainen lisätiivistys)
+   - jos app.js lisää body.land-compact, tiivistä vielä
+   ============================= */
+body.land-compact{
+  --die: 60;  /* pienennä noppia vielä */
+  --pip: 50;
+}
+body.land-compact .topbar{ padding: 6px 12px; }
+body.land-compact .title{ font-size: .95rem; }
+body.land-compact main{ margin: 8px auto; }
+body.land-compact .status{ gap: 6px; margin-bottom: 8px; }
+body.land-compact .status > div{ padding: 6px 8px; font-size: .9rem; }
+body.land-compact .dice-panel{ padding: 10px; margin-bottom:10px; }
+body.land-compact .controls{ gap:6px; margin:8px 0 4px; }
+body.land-compact button{ padding:8px 10px; font-size:.95rem; }
+body.land-compact .board{ gap:10px; }
+body.land-compact .scorecard, body.land-compact .throwaways{ padding:12px; border-radius:10px; }
+body.land-compact h2{ margin:6px 0 8px; font-size:1rem; }
+body.land-compact table{ font-size:.85rem; }
+body.land-compact thead th{ padding:4px 6px; }
+body.land-compact tbody td{ padding:5px 6px; }
+body.land-compact td.sum{ width:64px; }
+body.land-compact .badge .chip{ min-width:28px; padding:3px 6px; }
+body.land-compact .throw-grid{ gap:8px; }
+body.land-compact .throw-item{ padding:8px; }
+body.land-compact .dot{ width:12px; height:12px; }
+body.land-compact .footer{ padding:10px 0; font-size:.9rem; }
+
+
+#scoreTable td.scoreCell{ white-space: nowrap; }
+
+/* --- Pistetaulukko tiiviimmäksi --- */
+.scorecard{ padding: 6px; }
+.scorecard h2{ margin: 2px 0 4px; font-size: .9rem; }
+
+#scoreTable{
+  table-layout: fixed;
+  font-size: .78rem;
+  line-height: 1.1;
+}
+#scoreTable thead th{
+  padding: 2px 4px;
+}
+#scoreTable tbody td{
+  padding: 2px 4px;
+}
+#scoreTable td.sum{ width: 50px; }
+#scoreTable td.badge .chip{
+  min-width: 20px;
+  padding: 1px 3px;
+  font-size: .75rem;
+}
+#scoreTable td.scoreCell{ white-space: nowrap; }
+
+/* --- Poistodice (throwaways) tiiviimmäksi --- */
+.throwaways{ padding: 6px; }
+.throwaways h2{ margin: 2px 0 4px; font-size: .9rem; }
+
+.throw-grid{ gap: 6px; }
+.throw-item{ padding: 6px; border-radius: 8px; }
+.throw-head{ font-size: .8rem; }
+.throw-head .badge .chip{
+  min-width: 20px;
+  padding: 1px 3px;
+  font-size: .75rem;
+}
+.dotrow{ gap: 2px; }
+.dot{ width: 10px; height: 10px; }
+
+.throw-die {
+  font-size: 1.6rem;   /* testaa esim. 1.4–2rem */
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* Ensimmäinen pari */
+.die.pair1 {
+  background: #66b3ff;   /* vaaleansininen tausta */
+  color: #fff;           /* pisteet valkoisina */
+}
+
+/* Toinen pari */
+.die.pair2 {
+  background: #ff9966;   /* vaaleanoranssi tausta */
+  color: #fff;
+}
