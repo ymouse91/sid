@@ -1,13 +1,15 @@
 /* Simple cache-first service worker for Solitaire Dice PWA */
-const CACHE_NAME = 'solitaire-dice-v1.0.3';
-const ASSETS = [
-  './',
+
+const CACHE_VERSION = 'v1.0.1';
+const APP_CACHE = `sid-${CACHE_VERSION}`;
+
+const APP_SHELL = [
   './index.html',
   './style.css',
   './app.js',
   './manifest.webmanifest',
-  './icon-192.png',
-  './icon-512.png',
+  '.icons/icon-192.png',
+  '.icons/icon-512.png',
   './apple-touch-icon-180.png'
 ];
 
